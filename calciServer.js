@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const math = require('mathjs');
 
 dotenv.config();
 const PORT = process.env.PORT || 8000;
@@ -12,12 +13,13 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get('/calculate', (req, res) => {
     const expression = req.query.expression;
+    console.log(`Received expression: ${expression}`); // Log the expression for debugging
     if (expression) {
         try {
             const result = math.evaluate(expression);
-            const formattedResult = Number(result.toFixed(10)); 
-            res.json({ result: formattedResult });
+            res.json({ result });
         } catch (error) {
+            console.error('Error evaluating expression:', error); // Log detailed error
             res.status(400).json({ error: 'Invalid Expression' });
         }
     } else {

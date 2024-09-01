@@ -8,13 +8,15 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/calculate', (req, res) => {
     const expression = req.query.expression;
     if (expression) {
         try {
-            const result = eval(expression); // Note: eval is dangerous; use a safer expression parser in production
-            res.json({ result });
+            const result = math.evaluate(expression);
+            const formattedResult = Number(result.toFixed(10)); 
+            res.json({ result: formattedResult });
         } catch (error) {
             res.status(400).json({ error: 'Invalid Expression' });
         }
